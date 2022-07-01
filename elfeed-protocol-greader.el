@@ -442,7 +442,7 @@ result JSON content by http request.  Return
              (let* ((feed-url (map-elt feed 'url))
                     (feed-id (elfeed-protocol-format-subfeed-id
                               proto-id feed-url))
-                    (feed-title (map-elt feed 'title))
+                    (feed-title (elfeed-cleanup (map-elt feed 'title)))
                     (feed-db (elfeed-db-get-feed feed-id)))
                (setf (elfeed-feed-url feed-db) feed-id
                      (elfeed-feed-title feed-db) feed-title)))
@@ -544,7 +544,7 @@ BODY expressions at end."
                  (dotimes (i length)
                    (let* ((feed (elt feeds i))
                           (id (map-elt feed 'id))
-                          (title (map-elt feed 'title)))
+                          (title (elfeed-cleanup (map-elt feed 'title))))
                      (when (string= title feed-title)
                        (throw 'found id))))))))
     (unless id
@@ -596,7 +596,7 @@ http://myhost.com/items?type=3&batchSize=-1, and import the entries by calling
                                     (id (if (stringp id) (string-to-number id) id))
                                     (entry-id (car (time-convert (cons id 1000000) 1)))
                                     (entry-url (map-elt (elt entry-url 0) 'href))
-                                    (feed-title (map-elt origin 'title))
+                                    (feed-title (elfeed-cleanup (map-elt origin 'title)))
                                     (feed-id (map-elt origin 'streamId))
                                     (catnames (delete 'nil (mapcar (lambda (c)
                                                                      (elfeed-protocol-greader--get-category-name host-url c))
